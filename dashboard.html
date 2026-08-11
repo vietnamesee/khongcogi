@@ -52,50 +52,24 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 0.8;
-            }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
         @keyframes gradientMove {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .animate-fade-in {
-            animation: fadeInUp 0.5s ease forwards;
-        }
+        .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
 
         .glass {
             background: var(--glass-bg);
@@ -149,10 +123,7 @@
             background: rgba(255, 255, 255, 0.12);
             border-color: rgba(255, 255, 255, 0.2);
         }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 13px;
-        }
+        .btn-sm { padding: 6px 14px; font-size: 13px; }
         .gradient-text {
             background: var(--brand-gradient);
             -webkit-background-clip: text;
@@ -192,9 +163,7 @@
             transition: left 0.3s;
             backdrop-filter: blur(20px);
         }
-        .sidebar-desktop.open {
-            left: 0;
-        }
+        .sidebar-desktop.open { left: 0; }
 
         .sidebar-logo {
             display: flex;
@@ -213,11 +182,7 @@
             justify-content: center;
             flex-shrink: 0;
         }
-        .sidebar-logo span {
-            font-weight: 800;
-            font-size: 16px;
-            color: white;
-        }
+        .sidebar-logo span { font-weight: 800; font-size: 16px; color: white; }
 
         .sidebar-item {
             display: flex;
@@ -240,9 +205,7 @@
             color: white;
             border-color: rgba(88, 101, 242, 0.3);
         }
-        .sidebar-item svg {
-            flex-shrink: 0;
-        }
+        .sidebar-item svg { flex-shrink: 0; }
 
         .sidebar-menu {
             display: flex;
@@ -275,13 +238,8 @@
             display: inline-block;
             margin-right: 6px;
         }
-        .sidebar-token-status .status-dot.pending {
-            background: #fee75c;
-        }
-        .sidebar-token-status span {
-            font-weight: 600;
-            color: #fee75c;
-        }
+        .sidebar-token-status .status-dot.pending { background: #fee75c; }
+        .sidebar-token-status span { font-weight: 600; color: #fee75c; }
         .sidebar-token-status p {
             color: var(--text-muted);
             font-size: 11px;
@@ -297,27 +255,21 @@
             border-top: 1px solid var(--glass-border);
             margin-top: 4px;
         }
-        .sidebar-user img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid rgba(88, 101, 242, 0.4);
-            flex-shrink: 0;
+        .sidebar-user .token-display {
+            flex: 1;
+            min-width: 0;
         }
-        .sidebar-user .user-name {
+        .sidebar-user .token-display .token-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .sidebar-user .token-display .token-value {
             font-weight: 600;
             font-size: 13px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-        .sidebar-user .user-tag {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .sidebar-user .user-info {
-            flex: 1;
-            min-width: 0;
+            color: #57f287;
         }
         .sidebar-user button {
             background: none;
@@ -328,9 +280,7 @@
             border-radius: 6px;
             transition: color 0.2s;
         }
-        .sidebar-user button:hover {
-            color: #ed4245;
-        }
+        .sidebar-user button:hover { color: #ed4245; }
 
         .dashboard-main {
             margin-left: 0;
@@ -372,13 +322,7 @@
             gap: 8px;
             font-size: 13px;
         }
-        .header-breadcrumb a {
-            color: var(--text-muted);
-        }
-        .header-breadcrumb .current {
-            color: white;
-            font-weight: 600;
-        }
+        .header-breadcrumb .current { color: white; font-weight: 600; }
 
         .header-right {
             display: flex;
@@ -396,37 +340,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 4px 12px 4px 4px;
-            cursor: pointer;
-        }
-        .user-profile img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid rgba(88, 101, 242, 0.4);
-        }
-        .user-profile .profile-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: white;
-            line-height: 1.2;
-        }
-        .user-profile .profile-status {
-            font-size: 10px;
-            color: #57f287;
-            font-weight: 600;
-        }
+        .lang-btn:hover { background: rgba(255, 255, 255, 0.12); }
 
         .dashboard-content {
             flex: 1;
@@ -469,19 +383,9 @@
             gap: 16px;
             flex-wrap: wrap;
         }
-        .token-alert-icon {
-            color: #fee75c;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        .token-alert-content {
-            flex: 1;
-        }
-        .token-alert-title {
-            font-weight: 700;
-            color: #fee75c;
-            margin-bottom: 4px;
-        }
+        .token-alert-icon { color: #fee75c; font-size: 24px; flex-shrink: 0; }
+        .token-alert-content { flex: 1; }
+        .token-alert-title { font-weight: 700; color: #fee75c; margin-bottom: 4px; }
         .token-alert-desc {
             font-size: 13px;
             color: var(--text-secondary);
@@ -534,9 +438,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        .quick-actions {
-            padding: 24px;
-        }
+        .quick-actions { padding: 24px; }
         .quick-actions h2 {
             font-size: 16px;
             font-weight: 700;
@@ -556,9 +458,7 @@
             padding: 10px 16px;
         }
 
-        .recent-activity {
-            padding: 24px;
-        }
+        .recent-activity { padding: 24px; }
         .recent-header {
             display: flex;
             justify-content: space-between;
@@ -572,10 +472,7 @@
             align-items: center;
             gap: 8px;
         }
-        .recent-auto {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .recent-auto { font-size: 12px; color: var(--text-muted); }
         .activity-list {
             display: flex;
             flex-direction: column;
@@ -685,71 +582,31 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        .mobile-nav-item.active {
-            color: var(--brand);
-        }
-        .mobile-nav-item svg {
-            width: 18px;
-            height: 18px;
-        }
+        .mobile-nav-item.active { color: var(--brand); }
+        .mobile-nav-item svg { width: 18px; height: 18px; }
 
         @media (min-width: 769px) {
-            .sidebar-desktop {
-                left: 0 !important;
-            }
-            .dashboard-main {
-                margin-left: 240px !important;
-            }
-            #mobileMenuBtn {
-                display: none !important;
-            }
+            .sidebar-desktop { left: 0 !important; }
+            .dashboard-main { margin-left: 240px !important; }
+            #mobileMenuBtn { display: none !important; }
         }
 
         @media (max-width: 768px) {
-            .sidebar-desktop {
-                left: -240px !important;
-            }
-            .sidebar-desktop.open {
-                left: 0 !important;
-            }
-            .dashboard-main {
-                margin-left: 0 !important;
-            }
-            #mobileMenuBtn {
-                display: flex !important;
-            }
-            .dashboard-content {
-                padding: 16px 14px 80px 14px !important;
-            }
-            .mobile-bottom-nav {
-                display: flex !important;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            .dashboard-bottom {
-                grid-template-columns: 1fr !important;
-            }
-            .page-header {
-                flex-direction: column;
-            }
-            .token-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .user-profile .profile-status {
-                display: none;
-            }
-            .header-right .premium-btn {
-                font-size: 10px;
-                padding: 4px 10px;
-            }
+            .sidebar-desktop { left: -240px !important; }
+            .sidebar-desktop.open { left: 0 !important; }
+            .dashboard-main { margin-left: 0 !important; }
+            #mobileMenuBtn { display: flex !important; }
+            .dashboard-content { padding: 16px 14px 80px 14px !important; }
+            .mobile-bottom-nav { display: flex !important; }
+            .stats-grid { grid-template-columns: 1fr 1fr !important; }
+            .dashboard-bottom { grid-template-columns: 1fr !important; }
+            .page-header { flex-direction: column; }
+            .token-bar { flex-direction: column; align-items: stretch; }
+            .header-right .premium-btn { font-size: 10px; padding: 4px 10px; }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr !important;
-            }
+            .stats-grid { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
@@ -816,10 +673,9 @@
                 <p>Vào Dashboard để nhập Token</p>
             </div>
             <div class="sidebar-user">
-                <img id="userAvatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User">
-                <div class="user-info">
-                    <div class="user-name" id="userName">discord_user</div>
-                    <div class="user-tag" id="userTag">#1234</div>
+                <div class="token-display">
+                    <div class="token-label">🔑 Token hiện tại</div>
+                    <div class="token-value" id="sidebarTokenCount">0</div>
                 </div>
                 <button id="logoutBtn" title="Đăng xuất">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -854,13 +710,7 @@
                 <div class="header-right">
                     <button class="lang-btn">EN</button>
                     <button class="btn-primary btn-sm premium-btn">⭐ Nâng cấp Premium</button>
-                    <div class="user-profile">
-                        <img id="headerAvatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User">
-                        <div>
-                            <div class="profile-name" id="headerName">discord_user</div>
-                            <div class="profile-status">Còn 30 ngày</div>
-                        </div>
-                    </div>
+                    <div class="user-profile" style="display:none;"></div>
                 </div>
             </header>
 
@@ -869,7 +719,7 @@
                     <div class="page-header">
                         <div>
                             <h1>Dashboard</h1>
-                            <p class="page-sub" id="welcomeText">Xin chào discord_user! Quản lý RPC và Voice của bạn tại đây.</p>
+                            <p class="page-sub" id="welcomeText">Quản lý RPC và Voice của bạn tại đây.</p>
                         </div>
                         <div class="header-actions">
                             <button class="btn-secondary btn-sm">⚙️ Cài đặt</button>
@@ -1116,6 +966,7 @@
                     document.getElementById('voiceTotal').textContent = stats.voiceTotal || 0;
                     document.getElementById('totalRpc').textContent = stats.rpcTotal || 0;
                     document.getElementById('totalVoice').textContent = stats.voiceTotal || 0;
+                    document.getElementById('sidebarTokenCount').textContent = stats.totalTokens || 0;
 
                     const activityRes = await fetch('/api/activity');
                     const activities = await activityRes.json();
