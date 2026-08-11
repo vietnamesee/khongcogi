@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
@@ -19,11 +20,13 @@ let tokens = [];
 // ============================================================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
+app.get('/rpc-manager', (req, res) => res.sendFile(path.join(__dirname, 'rpc-manager.html')));
+app.get('/voice-treo', (req, res) => res.sendFile(path.join(__dirname, 'voice-treo.html')));
 app.get('/tokens', (req, res) => res.sendFile(path.join(__dirname, 'tokens.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 
 // ============================================================
-// API - TOKENS
+// API - TOKENS (CHỈ TOKEN, KHÔNG USER)
 // ============================================================
 
 // Lấy danh sách token
@@ -54,7 +57,7 @@ app.post('/api/tokens/add', (req, res) => {
         id: Date.now().toString(),
         token: token,
         name: name || 'Token ' + (tokens.length + 1),
-        createdAt: new Date().toLocaleString('vi-VN'),
+        createdAt: new Date().toISOString(),
         status: 'active'
     };
 
@@ -111,39 +114,7 @@ app.put('/api/tokens/:id/status', (req, res) => {
 });
 
 // ============================================================
-// API - RPC
-// ============================================================
-
-app.post('/api/rpc/create', (req, res) => {
-    const { tokenId, name, details, state, appId, activityType, platform } = req.body;
-
-    // Kiểm tra token tồn tại
-    const token = tokens.find(t => t.id === tokenId);
-    if (!token) {
-        return res.status(404).json({
-            success: false,
-            message: 'Không tìm thấy token!'
-        });
-    }
-
-    res.json({
-        success: true,
-        message: 'RPC đã được tạo thành công!',
-        data: {
-            token: token.token,
-            name: name || 'RPC của tôi',
-            details: details || '',
-            state: state || '',
-            appId: appId || '',
-            activityType: activityType || 'playing',
-            platform: platform || 'pc',
-            createdAt: new Date().toLocaleString('vi-VN')
-        }
-    });
-});
-
-// ============================================================
-// API - STATS
+// API - STATS (CHỈ TOKEN)
 // ============================================================
 
 app.get('/api/stats', (req, res) => {
