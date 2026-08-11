@@ -191,6 +191,7 @@
             <div style="display:flex;gap:8px;">
                 <button class="refresh" onclick="loadTokens()" title="Làm mới">🔄</button>
                 <a href="/login" class="btn btn-primary">➕ Thêm</a>
+                <a href="/dashboard" class="btn btn-secondary">📊 Dashboard</a>
             </div>
         </div>
 
@@ -278,7 +279,6 @@
             }
         }
 
-        // Load lần đầu và refresh mỗi 5s
         document.addEventListener('DOMContentLoaded', loadTokens);
         setInterval(loadTokens, 5000);
     </script>
