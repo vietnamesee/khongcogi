@@ -3,164 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiscordRPC - Đăng nhập</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
+    <title>Thêm Token</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0a12;
-            --bg-secondary: #11111f;
-            --text-primary: #ffffff;
-            --text-secondary: #b5bac1;
-            --text-muted: #6d7278;
-            --brand: #5865f2;
-            --brand-hover: #4752c4;
-            --brand-gradient: linear-gradient(135deg, #5865f2, #7289da);
-            --glass-bg: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --radius: 16px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --transition: all 0.3s ease;
-        }
         body {
-            font-family: var(--font);
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a12;
+            color: white;
             min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-        a { text-decoration: none; color: inherit; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .glass {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: var(--transition);
-        }
-        .glass:hover {
-            transform: translateY(-6px);
-            border-color: rgba(88, 101, 242, 0.4);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-
-        .btn-primary {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--brand-gradient);
-            color: white;
-            border: none;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(88, 101, 242, 0.3);
+            justify-content: center;
         }
-        .btn-primary:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 8px 32px rgba(88, 101, 242, 0.5);
-        }
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.06);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            transform: scale(1.05) translateY(-2px);
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        .gradient-text {
-            background: var(--brand-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .particle-container {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float var(--duration, 15s) ease-in-out var(--delay, 0s) infinite normal none running;
-        }
-
-        .login-container {
+        .box {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 40px;
             max-width: 420px;
             width: 100%;
-            padding: 40px;
             text-align: center;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.5s ease;
         }
-        .login-container:hover {
-            transform: none !important;
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .login-logo { margin-bottom: 24px; }
-        .login-logo-icon {
+        .box:hover { border-color: rgba(88,101,242,0.3); }
+        .logo {
             width: 56px;
             height: 56px;
-            background: var(--brand-gradient);
+            background: linear-gradient(135deg, #5865f2, #7289da);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px;
-            transition: all 0.5s ease;
+            margin: 0 auto 16px;
+            font-size: 28px;
         }
-        .login-logo-icon:hover { transform: rotate(-10deg) scale(1.1); }
-
-        .input-field {
+        h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+        .sub { color: #b5bac1; font-size: 14px; margin-bottom: 24px; }
+        input {
             width: 100%;
             padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 10px;
             color: white;
             font-size: 14px;
-            transition: all 0.3s ease;
-            outline: none;
             text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
         }
-        .input-field:focus {
-            border-color: var(--brand);
-            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        input:focus {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
         }
-        .input-field::placeholder { color: var(--text-muted); }
-
+        input::placeholder { color: #6d7278; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #5865f2, #7289da);
+            color: white;
+            box-shadow: 0 4px 16px rgba(88,101,242,0.3);
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 32px rgba(88,101,242,0.5);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+        .btn-success {
+            background: rgba(87,242,135,0.15);
+            color: #57f287;
+            border: 1px solid rgba(87,242,135,0.2);
+        }
+        .links { margin-top: 16px; display: flex; gap: 12px; justify-content: center; }
+        .links a {
+            color: #5865f2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .links a:hover { text-decoration: underline; }
         .toast {
             position: fixed;
             bottom: 30px;
@@ -177,148 +114,79 @@
         }
         .toast.show { opacity: 1; pointer-events: auto; }
         .toast.success {
-            background: rgba(87, 242, 135, 0.15);
-            border: 1px solid rgba(87, 242, 135, 0.3);
+            background: rgba(87,242,135,0.15);
+            border: 1px solid rgba(87,242,135,0.3);
             color: #57f287;
         }
         .toast.error {
-            background: rgba(237, 66, 69, 0.15);
-            border: 1px solid rgba(237, 66, 69, 0.3);
+            background: rgba(237,66,69,0.15);
+            border: 1px solid rgba(237,66,69,0.3);
             color: #ed4245;
-        }
-
-        @media (max-width: 480px) {
-            .login-container { padding: 28px 20px !important; margin: 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animated" style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
-        <div class="particle-container" id="particles"></div>
+    <div class="box">
+        <div class="logo">🔑</div>
+        <h2>Thêm Token</h2>
+        <p class="sub">Nhập Discord User Token của bạn</p>
 
-        <div class="glass login-container">
-            <div class="login-logo">
-                <div class="login-logo-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                        <line x1="6" y1="12" x2="10" y2="12"></line>
-                        <line x1="8" y1="10" x2="8" y2="14"></line>
-                        <circle cx="15" cy="13" r="1" fill="white"></circle>
-                        <circle cx="17" cy="11" r="1" fill="white"></circle>
-                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
-                    </svg>
-                </div>
-                <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.02em;">Đăng nhập vào <span class="gradient-text">DiscordRPC</span></h2>
-                <p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">Nhập token để thêm vào danh sách</p>
-            </div>
+        <form id="form">
+            <input type="password" id="tokenInput" placeholder="Nhập token..." required>
+            <button type="submit" class="btn btn-primary" id="submitBtn">➕ Thêm Token</button>
+        </form>
 
-            <div style="display:flex;flex-direction:column;gap:12px;">
-                <form id="tokenLoginForm" style="display:flex;flex-direction:column;gap:12px;">
-                    <input class="input-field" type="password" id="tokenInput" placeholder="Nhập Discord User Token của bạn..." required>
-                    <button type="submit" class="btn-secondary" style="padding:12px;font-size:15px;justify-content:center;width:100%;" id="loginBtn">
-                        🔑 Thêm Token
-                    </button>
-                </form>
-                
-                <a href="/dashboard" class="btn-primary" style="padding:12px;font-size:15px;justify-content:center;width:100%;text-decoration:none;">
-                    🏠 Vào Dashboard (Không cần token)
-                </a>
-            </div>
-
-            <p style="color:var(--text-muted);font-size:12px;margin-top:20px;line-height:1.5;">
-                ⚠️ Sử dụng user token có thể vi phạm Discord ToS.<br>
-                Bạn tự chịu trách nhiệm khi sử dụng.
-            </p>
+        <div class="links">
+            <a href="/tokens">📋 Xem danh sách token</a>
         </div>
+    </div>
 
-        <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>
 
-        <script>
-            // ============================================================
-            // PARTICLES
-            // ============================================================
-            (function() {
-                const c = document.getElementById('particles');
-                if (!c) return;
-                for (let i = 0; i < 30; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'particle';
-                    const s = 0.8 + Math.random() * 3;
-                    p.style.width = s + 'px';
-                    p.style.height = s + 'px';
-                    p.style.background = `rgba(88, 101, 242, ${0.2 + Math.random() * 0.5})`;
-                    p.style.left = Math.random() * 100 + '%';
-                    p.style.top = Math.random() * 100 + '%';
-                    p.style.setProperty('--duration', (10 + Math.random() * 10) + 's');
-                    p.style.setProperty('--delay', (Math.random() * 5) + 's');
-                    c.appendChild(p);
-                }
-            })();
+    <script>
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
 
-            // ============================================================
-            // TOAST
-            // ============================================================
-            function showToast(message, type = 'success') {
-                const toast = document.getElementById('toast');
-                toast.textContent = message;
-                toast.className = 'toast ' + type + ' show';
-                setTimeout(() => toast.classList.remove('show'), 3000);
+        document.getElementById('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const token = document.getElementById('tokenInput').value.trim();
+            const btn = document.getElementById('submitBtn');
+
+            if (!token) {
+                showToast('Vui lòng nhập token!', 'error');
+                return;
             }
 
-            // ============================================================
-            // THÊM TOKEN (Không cần user)
-            // ============================================================
-            document.getElementById('tokenLoginForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const token = document.getElementById('tokenInput').value.trim();
-                const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Đang xử lý...';
 
-                if (!token) {
-                    showToast('Vui lòng nhập token!', 'error');
-                    return;
+            try {
+                const res = await fetch('/api/tokens/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('✅ Thêm token thành công!', 'success');
+                    document.getElementById('tokenInput').value = '';
+                    document.getElementById('tokenInput').focus();
+                } else {
+                    showToast(data.error || 'Lỗi!', 'error');
                 }
+            } catch (error) {
+                showToast('Lỗi kết nối server!', 'error');
+            }
 
-                if (token.length < 10) {
-                    showToast('Token quá ngắn! (cần >10 ký tự)', 'error');
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.textContent = '⏳ Đang thêm...';
-
-                try {
-                    // Thêm token vào server
-                    const addRes = await fetch('/api/tokens/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            token: token,
-                            name: `Token ${new Date().toLocaleTimeString()}`
-                        })
-                    });
-                    const addData = await addRes.json();
-
-                    if (addData.success) {
-                        showToast('✅ Thêm token thành công!', 'success');
-                        document.getElementById('tokenInput').value = '';
-                        // Cập nhật số token trong sidebar nếu có
-                        try {
-                            const statsRes = await fetch('/api/stats');
-                            const stats = await statsRes.json();
-                            console.log('Tổng token:', stats.tokens);
-                        } catch(e) {}
-                    } else {
-                        showToast(addData.message || 'Lỗi khi thêm token!', 'error');
-                    }
-
-                } catch (error) {
-                    console.error('Lỗi:', error);
-                    showToast('Lỗi kết nối server!', 'error');
-                }
-
-                btn.disabled = false;
-                btn.textContent = '🔑 Thêm Token';
-            });
-        </script>
-    </div>
+            btn.disabled = false;
+            btn.textContent = '➕ Thêm Token';
+        });
+    </script>
 </body>
 </html>
