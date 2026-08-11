@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
-// LƯU TOKEN TRONG RAM (KHÔNG CÓ TOKEN MẶC ĐỊNH)
+// LƯU TOKEN TRONG RAM
 // ============================================================
 let tokens = [];
 
@@ -37,7 +37,7 @@ app.get('/api/tokens', (req, res) => {
     res.json({ tokens });
 });
 
-// 2. Thêm token mới
+// 2. Thêm token (tự động)
 app.post('/api/tokens/add', (req, res) => {
     const { token, name } = req.body;
 
@@ -49,10 +49,12 @@ app.post('/api/tokens/add', (req, res) => {
     }
 
     // Kiểm tra token đã tồn tại
-    if (tokens.some(t => t.token === token)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Token này đã tồn tại!'
+    const exists = tokens.some(t => t.token === token);
+    if (exists) {
+        return res.json({
+            success: true,
+            message: 'Token đã tồn tại!',
+            data: tokens.find(t => t.token === token)
         });
     }
 
@@ -115,7 +117,7 @@ app.put('/api/tokens/:id/status', (req, res) => {
     });
 });
 
-// 5. Kiểm tra token (xác thực)
+// 5. Kiểm tra token (luôn trả về thành công)
 app.post('/api/token/verify', (req, res) => {
     const { token } = req.body;
 
@@ -133,12 +135,11 @@ app.post('/api/token/verify', (req, res) => {
         });
     }
 
-    // Giả lập thông tin user từ token
     res.json({
         success: true,
         message: 'Token hợp lệ!',
         data: {
-            username: 'discord_user',
+            username: 'discord_user_' + token.slice(-4),
             discriminator: '1234',
             avatar: 'https://cdn.discordapp.com/embed/avatars/0.png'
         }
@@ -237,6 +238,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`   GET  /api/activity        - Lấy hoạt động`);
     console.log(`   POST /api/rpc/create      - Tạo RPC`);
     console.log('='.repeat(50));
-    console.log('💡  Hiện tại chưa có token nào. Đăng nhập để thêm token!');
+    console.log('💡  Nhập token bất kỳ để thêm vào danh sách!');
     console.log('='.repeat(50));
 });
