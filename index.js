@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const cors = require('cors');
 
 const app = express();
@@ -15,36 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
-// FILE LƯU TRỮ TOKENS
+// LƯU TOKEN TRONG RAM (tạm thời)
 // ============================================================
-const TOKENS_FILE = path.join(__dirname, 'tokens.json');
+let tokens = [];
 
-function readTokens() {
-    try {
-        if (fs.existsSync(TOKENS_FILE)) {
-            const data = fs.readFileSync(TOKENS_FILE, 'utf8');
-            return JSON.parse(data);
-        }
-    } catch (error) {
-        console.error('Lỗi đọc tokens.json:', error);
-    }
-    return { tokens: [] };
-}
-
-function writeTokens(data) {
-    try {
-        fs.writeFileSync(TOKENS_FILE, JSON.stringify(data, null, 2), 'utf8');
-        return true;
-    } catch (error) {
-        console.error('Lỗi ghi tokens.json:', error);
-        return false;
-    }
-}
-
-if (!fs.existsSync(TOKENS_FILE)) {
-    writeTokens({ tokens: [] });
-    console.log('✅ Đã tạo file tokens.json');
-}
+// Thêm token mặc định để có dữ liệu ban đầu
+tokens.push({
+    id: Date.now().toString(),
+    token: 'MTIzNDU2Nzg5MDEyMzQ1Njc4OQ',
+    name: 'Tài khoản chính (@discord_user)',
+    createdAt: new Date().toISOString(),
+    status: 'active'
+});
 
 // ============================================================
 // HTML ROUTES
@@ -62,7 +43,7 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html'))
 
 // 1. Lấy danh sách tokens
 app.get('/api/tokens', (req, res) => {
-    res.json(readTokens());
+    res.json({ tokens });
 });
 
 // 2. Thêm token mới
@@ -76,9 +57,8 @@ app.post('/api/tokens/add', (req, res) => {
         });
     }
 
-    const data = readTokens();
-
-    if (data.tokens.some(t => t.token === token)) {
+    // Kiểm tra token đã tồn tại
+    if (tokens.some(t => t.token === token)) {
         return res.status(400).json({
             success: false,
             message: 'Token này đã tồn tại!'
@@ -93,27 +73,19 @@ app.post('/api/tokens/add', (req, res) => {
         status: 'active'
     };
 
-    data.tokens.push(newToken);
+    tokens.push(newToken);
 
-    if (writeTokens(data)) {
-        res.json({
-            success: true,
-            message: 'Thêm token thành công!',
-            data: newToken
-        });
-    } else {
-        res.status(500).json({
-            success: false,
-            message: 'Không thể lưu token!'
-        });
-    }
+    res.json({
+        success: true,
+        message: 'Thêm token thành công!',
+        data: newToken
+    });
 });
 
 // 3. Xóa token
 app.delete('/api/tokens/:id', (req, res) => {
     const { id } = req.params;
-    const data = readTokens();
-    const index = data.tokens.findIndex(t => t.id === id);
+    const index = tokens.findIndex(t => t.id === id);
 
     if (index === -1) {
         return res.status(404).json({
@@ -122,27 +94,19 @@ app.delete('/api/tokens/:id', (req, res) => {
         });
     }
 
-    data.tokens.splice(index, 1);
+    tokens.splice(index, 1);
 
-    if (writeTokens(data)) {
-        res.json({
-            success: true,
-            message: 'Xóa token thành công!'
-        });
-    } else {
-        res.status(500).json({
-            success: false,
-            message: 'Không thể xóa token!'
-        });
-    }
+    res.json({
+        success: true,
+        message: 'Xóa token thành công!'
+    });
 });
 
 // 4. Cập nhật trạng thái token
 app.put('/api/tokens/:id/status', (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
-    const data = readTokens();
-    const token = data.tokens.find(t => t.id === id);
+    const token = tokens.find(t => t.id === id);
 
     if (!token) {
         return res.status(404).json({
@@ -153,21 +117,14 @@ app.put('/api/tokens/:id/status', (req, res) => {
 
     token.status = status;
 
-    if (writeTokens(data)) {
-        res.json({
-            success: true,
-            message: 'Cập nhật trạng thái thành công!',
-            data: token
-        });
-    } else {
-        res.status(500).json({
-            success: false,
-            message: 'Không thể cập nhật!'
-        });
-    }
+    res.json({
+        success: true,
+        message: 'Cập nhật trạng thái thành công!',
+        data: token
+    });
 });
 
-// 5. Kiểm tra token (giả lập)
+// 5. Kiểm tra token
 app.post('/api/token/verify', (req, res) => {
     const { token } = req.body;
 
@@ -201,9 +158,8 @@ app.post('/api/token/verify', (req, res) => {
 // API - USER & STATS
 // ============================================================
 
-// 6. Lấy thông tin user (placeholder)
+// 6. Lấy thông tin user
 app.get('/api/user', (req, res) => {
-    const data = readTokens();
     res.json({
         id: 'user_id_placeholder',
         username: 'discord_user',
@@ -211,31 +167,29 @@ app.get('/api/user', (req, res) => {
         avatar: 'https://cdn.discordapp.com/embed/avatars/0.png',
         premium: false,
         premiumDays: 0,
-        tokenCount: data.tokens.length
+        tokenCount: tokens.length
     });
 });
 
 // 7. Lấy thống kê
 app.get('/api/stats', (req, res) => {
-    const data = readTokens();
-    const activeTokens = data.tokens.filter(t => t.status === 'active').length;
+    const activeTokens = tokens.filter(t => t.status === 'active').length;
 
     res.json({
         rpcRunning: 0,
         rpcTotal: 0,
         voiceRunning: 0,
         voiceTotal: 0,
-        tokens: data.tokens.length,
+        tokens: tokens.length,
         activeTokens: activeTokens
     });
 });
 
 // 8. Lấy hoạt động gần đây
 app.get('/api/activity', (req, res) => {
-    const data = readTokens();
     const activities = [];
 
-    data.tokens.slice(-5).forEach(token => {
+    tokens.slice(-5).forEach(token => {
         activities.push({
             icon: 'token',
             text: `Đã thêm token: ${token.name || 'Không tên'}`,
