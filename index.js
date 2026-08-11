@@ -14,11 +14,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
-// LƯU TOKEN TRONG RAM (tạm thời)
+// LƯU TOKEN TRONG RAM
 // ============================================================
 let tokens = [];
 
-// Thêm token mặc định để có dữ liệu ban đầu
+// Thêm token mặc định để demo
 tokens.push({
     id: Date.now().toString(),
     token: 'MTIzNDU2Nzg5MDEyMzQ1Njc4OQ',
@@ -124,7 +124,7 @@ app.put('/api/tokens/:id/status', (req, res) => {
     });
 });
 
-// 5. Kiểm tra token
+// 5. Kiểm tra token (xác thực)
 app.post('/api/token/verify', (req, res) => {
     const { token } = req.body;
 
@@ -142,7 +142,7 @@ app.post('/api/token/verify', (req, res) => {
         });
     }
 
-    // Giả lập thông tin user
+    // Giả lập thông tin user từ token
     res.json({
         success: true,
         message: 'Token hợp lệ!',
