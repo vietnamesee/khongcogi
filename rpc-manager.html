@@ -4,11 +4,907 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DiscordRPC - RPC Manager</title>
-    <link rel="icon" href="/assets/favicon.ico">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #0a0a12;
+            --bg-secondary: #11111f;
+            --text-primary: #ffffff;
+            --text-secondary: #b5bac1;
+            --text-muted: #6d7278;
+            --brand: #5865f2;
+            --brand-hover: #4752c4;
+            --brand-gradient: linear-gradient(135deg, #5865f2, #7289da);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --radius: 16px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --transition: all 0.3s ease;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--brand);
+            border-radius: 10px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+        }
+        .glass:hover {
+            transform: translateY(-6px);
+            border-color: rgba(88, 101, 242, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--brand-gradient);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(88, 101, 242, 0.3);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 32px rgba(88, 101, 242, 0.5);
+        }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            transform: scale(1.05) translateY(-2px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+        .gradient-text {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 6s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        .particle-container {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float var(--duration, 15s) ease-in-out var(--delay, 0s) infinite normal none running;
+        }
+
+        .sidebar-desktop {
+            width: 240px;
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 12px;
+            position: fixed;
+            top: 0;
+            left: -240px;
+            bottom: 0;
+            z-index: 50;
+            transition: left 0.3s;
+            backdrop-filter: blur(20px);
+        }
+        .sidebar-desktop.open {
+            left: 0;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            margin-bottom: 20px;
+        }
+        .sidebar-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-gradient);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .sidebar-logo span {
+            font-weight: 800;
+            font-size: 16px;
+            color: white;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+        }
+        .sidebar-item.active {
+            background: rgba(88, 101, 242, 0.15);
+            color: white;
+            border-color: rgba(88, 101, 242, 0.3);
+        }
+        .sidebar-item svg {
+            flex-shrink: 0;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+        .sidebar-menu-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-token-status {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(254, 231, 92, 0.08);
+            border: 1px solid rgba(254, 231, 92, 0.2);
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        .sidebar-token-status .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .sidebar-token-status .status-dot.pending {
+            background: #fee75c;
+        }
+        .sidebar-token-status span {
+            font-weight: 600;
+            color: #fee75c;
+        }
+        .sidebar-token-status p {
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4px;
+        }
+        .sidebar-user img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid rgba(88, 101, 242, 0.4);
+            flex-shrink: 0;
+        }
+        .sidebar-user .user-name {
+            font-weight: 600;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sidebar-user .user-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .sidebar-user .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .sidebar-user button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            border-radius: 6px;
+            transition: color 0.2s;
+        }
+        .sidebar-user button:hover {
+            color: #ed4245;
+        }
+
+        .dashboard-main {
+            margin-left: 0;
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-header {
+            height: 64px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            background: rgba(7, 7, 13, 0.75);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            justify-content: space-between;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-left .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+        }
+        .header-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .header-breadcrumb a {
+            color: var(--text-muted);
+        }
+        .header-breadcrumb .current {
+            color: white;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 4px 12px 4px 4px;
+            cursor: pointer;
+        }
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(88, 101, 242, 0.4);
+        }
+        .user-profile .profile-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+        .user-profile .profile-status {
+            font-size: 10px;
+            color: #57f287;
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 28px;
+            max-width: 1200px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+        .page-header .page-sub {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .page-header .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .token-bar {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .token-bar .token-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .token-bar .token-info .label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+        .token-bar .token-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(237, 66, 69, 0.15);
+            border: 1px solid rgba(237, 66, 69, 0.3);
+            padding: 4px 8px 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+        }
+        .token-bar .token-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ed4245;
+            flex-shrink: 0;
+        }
+        .token-bar .token-badge .warn {
+            color: #ed4245;
+            font-weight: 700;
+            font-size: 10px;
+        }
+
+        .empty-state {
+            padding: 60px;
+            text-align: center;
+        }
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 820px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 20px;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .input-field:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+        select.input-field {
+            appearance: none;
+            cursor: pointer;
+        }
+        select.input-field option {
+            background: var(--bg-secondary);
+        }
+
+        .activity-types {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .activity-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+        .activity-btn:hover {
+            border-color: var(--brand);
+            background: rgba(88, 101, 242, 0.15);
+        }
+        .activity-btn.active {
+            border-color: var(--brand);
+            background: var(--brand);
+            box-shadow: 0 0 16px rgba(88, 101, 242, 0.6);
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+        }
+        .platform-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .platform-chip:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .platform-chip.active {
+            border-color: var(--brand);
+            background: rgba(88, 101, 242, 0.15);
+            color: white;
+        }
+        .platform-chip.active.vr {
+            border-color: #5865f2;
+            background: rgba(88, 101, 242, 0.2);
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle input:checked+.toggle-slider {
+            background: var(--brand);
+        }
+        .toggle input:checked+.toggle-slider::before {
+            transform: translateX(20px);
+        }
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-row span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .preview-side {
+            position: sticky;
+            top: 20px;
+        }
+        .preview-side .preview-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+
+        .discord-card {
+            background: #1e1e2e;
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid var(--brand);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+        .discord-card .card-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+        .discord-card .card-body {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .discord-card .activity-img {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .discord-card .activity-large {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: var(--brand-gradient);
+        }
+        .discord-card .activity-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .discord-card .activity-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .discord-card .activity-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        .discord-card .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .discord-btn {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            transition: background 0.2s ease;
+            cursor: default;
+        }
+        .discord-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 18, 0.95);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--glass-border);
+            padding: 8px 0 env(safe-area-inset-bottom, 8px);
+            z-index: 40;
+            justify-content: space-around;
+        }
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 12px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .mobile-nav-item.active {
+            color: var(--brand);
+        }
+        .mobile-nav-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (min-width: 769px) {
+            .sidebar-desktop {
+                left: 0 !important;
+            }
+            .dashboard-main {
+                margin-left: 240px !important;
+            }
+            #mobileMenuBtn {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-desktop {
+                left: -240px !important;
+            }
+            .sidebar-desktop.open {
+                left: 0 !important;
+            }
+            .dashboard-main {
+                margin-left: 0 !important;
+            }
+            #mobileMenuBtn {
+                display: flex !important;
+            }
+            .dashboard-content {
+                padding: 16px 14px 80px 14px !important;
+            }
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            .modal-body {
+                grid-template-columns: 1fr !important;
+            }
+            .page-header {
+                flex-direction: column;
+            }
+            .modal-content {
+                padding: 20px !important;
+                max-height: 95vh;
+            }
+            .platform-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .token-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .user-profile .profile-status {
+                display: none;
+            }
+            .header-right .premium-btn {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .platform-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="bg-animated" style="min-height:100vh;display:flex;">
+        <div class="particle-container" id="particles"></div>
+
         <!-- SIDEBAR -->
         <aside class="sidebar-desktop" id="sidebar">
             <a href="/" class="sidebar-logo">
@@ -31,7 +927,7 @@
             </a>
             <div class="sidebar-menu">
                 <div class="sidebar-menu-label">Menu Quản Lý</div>
-                <a class="sidebar-item" href="/dashboard.html">
+                <a class="sidebar-item" href="/dashboard">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -40,14 +936,14 @@
                     </svg>
                     Dashboard
                 </a>
-                <a class="sidebar-item active" href="/rpc-manager.html">
+                <a class="sidebar-item active" href="/rpc-manager">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polygon points="10 8 16 12 10 16 10 8"></polygon>
                     </svg>
                     RPC Manager
                 </a>
-                <a class="sidebar-item" href="/voice-treo.html">
+                <a class="sidebar-item" href="/voice-treo">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -56,7 +952,7 @@
                     </svg>
                     Voice Treo
                 </a>
-                <a class="sidebar-item" href="/tokens.html">
+                <a class="sidebar-item" href="/tokens">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
                     </svg>
@@ -69,10 +965,10 @@
                 <p>Vào Dashboard để nhập Token</p>
             </div>
             <div class="sidebar-user">
-                <img id="userAvatar" src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User">
                 <div class="user-info">
-                    <div class="user-name">contiendinh0612</div>
-                    <div class="user-tag">#8840</div>
+                    <div class="user-name">discord_user</div>
+                    <div class="user-tag">#1234</div>
                 </div>
                 <button title="Đăng xuất">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -86,7 +982,6 @@
 
         <!-- MAIN CONTENT -->
         <div class="dashboard-main">
-            <!-- HEADER -->
             <header class="dashboard-header">
                 <div class="header-left">
                     <button class="btn-secondary btn-sm" id="mobileMenuBtn">
@@ -103,7 +998,7 @@
                         Quay lại
                     </button>
                     <div class="header-breadcrumb">
-                        <a href="/dashboard.html">Dashboard</a>
+                        <a href="/dashboard">Dashboard</a>
                         <span>/</span>
                         <span class="current">RPC Manager</span>
                     </div>
@@ -112,22 +1007,21 @@
                     <button class="lang-btn">EN</button>
                     <button class="btn-primary btn-sm premium-btn">⭐ Nâng cấp Premium</button>
                     <div class="user-profile">
-                        <img src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                        <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User">
                         <div>
-                            <div class="profile-name">contiendinh0612</div>
+                            <div class="profile-name">discord_user</div>
                             <div class="profile-status">Còn 30 ngày</div>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <!-- MAIN -->
             <main class="dashboard-content">
                 <div class="animate-fade-in">
                     <div class="page-header">
                         <div>
                             <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-                                <a class="btn-secondary btn-sm" href="/dashboard.html" style="padding:4px 10px;">← Quay lại Dashboard</a>
+                                <a class="btn-secondary btn-sm" href="/dashboard" style="padding:4px 10px;">← Quay lại Dashboard</a>
                                 <h1>🎮 RPC Manager</h1>
                             </div>
                             <p class="page-sub">Tạo và quản lý Rich Presence Discord của bạn</p>
@@ -144,20 +1038,18 @@
                         </div>
                     </div>
 
-                    <!-- Token Bar -->
                     <div class="token-bar">
                         <div class="token-info">
                             <span class="label">🔑 Tài khoản Tokens (1):</span>
                             <div class="token-badge">
                                 <span class="dot"></span>
-                                <strong>Tài khoản chính (@contiendinh0612)</strong>&nbsp;(@contiendinh0612)
+                                <strong>Tài khoản chính (@discord_user)</strong>&nbsp;(#1234)
                                 <span class="warn">⚠️</span>
                             </div>
                         </div>
                         <button class="btn-secondary btn-sm">+ Thêm Token Mới</button>
                     </div>
 
-                    <!-- Empty State -->
                     <div class="glass empty-state">
                         <div class="icon">🎮</div>
                         <h3>Chưa có RPC nào</h3>
@@ -168,7 +1060,7 @@
             </main>
         </div>
 
-        <!-- ===== MODAL TẠO RPC (có Preview Live) ===== -->
+        <!-- MODAL TẠO RPC -->
         <div class="modal-overlay" id="rpcModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -176,27 +1068,23 @@
                     <button class="modal-close" id="closeModalBtn">✕</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Form bên trái -->
                     <form class="modal-form" id="rpcForm">
-                        <!-- Chọn Token -->
                         <div>
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                                 <label class="input-label">🔑 Chọn Tài Khoản Token</label>
                                 <button type="button" style="background:none;border:none;color:var(--brand);font-size:12px;font-weight:600;cursor:pointer;">+ Thêm Token Mới</button>
                             </div>
                             <select class="input-field">
-                                <option>Tài khoản chính (@contiendinh0612) (@contiendinh0612)</option>
+                                <option>Tài khoản chính (@discord_user) (#1234)</option>
                                 <option value="NEW_TOKEN">+ Thêm Account Token Mới...</option>
                             </select>
                         </div>
 
-                        <!-- Tên RPC -->
                         <div>
                             <label class="input-label">Tên RPC *</label>
                             <input class="input-field" id="rpcName" placeholder="VD: Playing Minecraft" value="">
                         </div>
 
-                        <!-- Activity Type -->
                         <div>
                             <label class="input-label" style="margin-bottom:10px;">LOẠI HOẠT ĐỘNG (ACTIVITY TYPE)</label>
                             <div class="activity-types" id="activityTypes">
@@ -212,7 +1100,6 @@
                             </div>
                         </div>
 
-                        <!-- Platform -->
                         <div>
                             <label class="input-label" style="color:#57f287;font-weight:700;margin-bottom:8px;">🥽 Nền tảng hiển thị Badge (Platform)</label>
                             <div class="platform-grid" id="platformGrid">
@@ -227,25 +1114,21 @@
                             </div>
                         </div>
 
-                        <!-- Application ID -->
                         <div>
                             <label class="input-label">Application ID</label>
                             <input class="input-field" id="appId" placeholder="Discord Application ID" value="">
                         </div>
 
-                        <!-- Details -->
                         <div>
                             <label class="input-label">Details (dòng 1)</label>
                             <input class="input-field" id="details" placeholder="VD: Đang chơi với bạn bè" value="">
                         </div>
 
-                        <!-- State -->
                         <div>
                             <label class="input-label">State (dòng 2)</label>
                             <input class="input-field" id="state" placeholder="VD: Survival Mode" value="">
                         </div>
 
-                        <!-- Large Image -->
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                             <div>
                                 <label class="input-label">Large Image URL</label>
@@ -257,7 +1140,6 @@
                             </div>
                         </div>
 
-                        <!-- Small Image -->
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                             <div>
                                 <label class="input-label">Small Image URL</label>
@@ -269,7 +1151,6 @@
                             </div>
                         </div>
 
-                        <!-- Buttons -->
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                             <div>
                                 <label class="input-label">Button 1 Label</label>
@@ -291,7 +1172,6 @@
                             </div>
                         </div>
 
-                        <!-- Toggle -->
                         <div class="toggle-row">
                             <label class="toggle">
                                 <input type="checkbox" id="showTime" checked>
@@ -300,14 +1180,12 @@
                             <span>Hiển thị thời gian elapsed</span>
                         </div>
 
-                        <!-- Submit -->
                         <div style="display:flex;gap:10px;margin-top:8px;">
                             <button type="submit" class="btn-primary" style="flex:1;justify-content:center;">✅ Tạo RPC</button>
                             <button type="button" class="btn-secondary" id="closeModalBtn2">Hủy</button>
                         </div>
                     </form>
 
-                    <!-- Preview bên phải -->
                     <div class="preview-side">
                         <div class="preview-label">PREVIEW LIVE</div>
                         <div class="discord-card" id="previewCard">
@@ -332,9 +1210,8 @@
             </div>
         </div>
 
-        <!-- MOBILE BOTTOM NAV -->
         <nav class="mobile-bottom-nav">
-            <a class="mobile-nav-item" href="/dashboard.html">
+            <a class="mobile-nav-item" href="/dashboard">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -343,14 +1220,14 @@
                 </svg>
                 <span>Dashboard</span>
             </a>
-            <a class="mobile-nav-item active" href="/rpc-manager.html">
+            <a class="mobile-nav-item active" href="/rpc-manager">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polygon points="10 8 16 12 10 16 10 8"></polygon>
                 </svg>
                 <span>RPC Manager</span>
             </a>
-            <a class="mobile-nav-item" href="/voice-treo.html">
+            <a class="mobile-nav-item" href="/voice-treo">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -359,7 +1236,7 @@
                 </svg>
                 <span>Voice Treo</span>
             </a>
-            <a class="mobile-nav-item" href="/tokens.html">
+            <a class="mobile-nav-item" href="/tokens">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
                 </svg>
@@ -367,32 +1244,132 @@
             </a>
         </nav>
 
-        <style>
-            @media (max-width: 768px) {
-                .sidebar-desktop { left: -240px !important; }
-                .sidebar-desktop.open { left: 0 !important; }
-                .dashboard-main { margin-left: 0 !important; }
-                #mobileMenuBtn { display: flex !important; }
-                .dashboard-content { padding: 16px 14px 80px 14px !important; }
-                .mobile-bottom-nav { display: flex !important; }
-                .modal-body { grid-template-columns: 1fr !important; }
-                .page-header { flex-direction: column; }
-                .modal-content { padding: 20px !important; max-height: 95vh; }
-                .platform-grid { grid-template-columns: 1fr 1fr !important; }
-            }
-            .discord-btn {
-                padding: 4px 12px;
-                background: rgba(255,255,255,0.06);
-                border-radius: 4px;
-                font-size: 11px;
-                color: var(--text-secondary);
-                transition: background 0.2s ease;
-                cursor: default;
-            }
-            .discord-btn:hover { background: rgba(255,255,255,0.12); }
-        </style>
-    </div>
+        <script>
+            // PARTICLES
+            (function() {
+                const c = document.getElementById('particles');
+                if (!c) return;
+                for (let i = 0; i < 30; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    const s = 0.8 + Math.random() * 3;
+                    p.style.width = s + 'px';
+                    p.style.height = s + 'px';
+                    p.style.background = `rgba(88, 101, 242, ${0.2 + Math.random() * 0.5})`;
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.setProperty('--duration', (10 + Math.random() * 10) + 's');
+                    p.style.setProperty('--delay', (Math.random() * 5) + 's');
+                    c.appendChild(p);
+                }
+            })();
 
-    <script src="/js/main.js"></script>
+            // SIDEBAR TOGGLE
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            if (mobileBtn && sidebar) {
+                mobileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('open');
+                });
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        if (!sidebar.contains(e.target) && e.target !== mobileBtn && !mobileBtn.contains(e.target)) {
+                            sidebar.classList.remove('open');
+                        }
+                    }
+                });
+            }
+
+            // MODAL
+            const modal = document.getElementById('rpcModal');
+            const openBtns = document.querySelectorAll('#openModalBtn, #openModalBtn2');
+            const closeBtns = document.querySelectorAll('#closeModalBtn, #closeModalBtn2');
+
+            if (modal) {
+                openBtns.forEach(btn => {
+                    if (btn) btn.addEventListener('click', () => modal.classList.add('open'));
+                });
+                closeBtns.forEach(btn => {
+                    if (btn) btn.addEventListener('click', () => modal.classList.remove('open'));
+                });
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) modal.classList.remove('open');
+                });
+            }
+
+            // ACTIVITY TYPE
+            const activityBtns = document.querySelectorAll('.activity-btn');
+            const activityLabel = document.getElementById('selectedActivityLabel');
+            const previewIcon = document.getElementById('previewIcon');
+            const previewCard = document.getElementById('previewCard');
+            const activityMap = {
+                playing: { label: 'Đang chơi Game (Playing)', icon: '🎮', header: 'Playing' },
+                streaming: { label: 'Đang Livestream (Streaming)', icon: '📺', header: 'Streaming' },
+                watching: { label: 'Đang xem (Watching)', icon: '👀', header: 'Watching' },
+                listening: { label: 'Đang nghe nhạc (Listening)', icon: '🎵', header: 'Listening' },
+                competing: { label: 'Đang thi đấu (Competing)', icon: '🏆', header: 'Competing' },
+                vr: { label: 'Đang dùng VR (VR)', icon: '🥽', header: 'VR' }
+            };
+
+            activityBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    activityBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const type = this.dataset.type;
+                    const info = activityMap[type] || activityMap['playing'];
+                    if (activityLabel) activityLabel.textContent = info.label;
+                    if (previewIcon) previewIcon.textContent = info.icon;
+                    if (previewCard) {
+                        const header = previewCard.querySelector('.card-header');
+                        if (header) header.textContent = info.header + ' — Preview';
+                    }
+                });
+            });
+
+            // PLATFORM CHIPS
+            document.querySelectorAll('.platform-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('.platform-chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // PREVIEW UPDATE
+            const rpcForm = document.getElementById('rpcForm');
+            if (rpcForm) {
+                rpcForm.querySelectorAll('input:not([type="checkbox"])').forEach(input => {
+                    input.addEventListener('input', updatePreview);
+                });
+                document.getElementById('showTime')?.addEventListener('change', updatePreview);
+            }
+
+            function updatePreview() {
+                const name = document.getElementById('rpcName');
+                const details = document.getElementById('details');
+                const state = document.getElementById('state');
+                const btn1Label = document.getElementById('btn1Label');
+                const btn2Label = document.getElementById('btn2Label');
+                const showTime = document.getElementById('showTime');
+                const previewTitle = document.getElementById('previewTitle');
+                const previewSub = document.getElementById('previewSub');
+                const previewTime = document.getElementById('previewTime');
+                const previewBtn1 = document.getElementById('previewBtn1');
+                const previewBtn2 = document.getElementById('previewBtn2');
+
+                if (previewTitle) previewTitle.textContent = name && name.value ? name.value : 'Tên ứng dụng';
+                if (previewSub) {
+                    const d = details && details.value ? details.value : '';
+                    const s = state && state.value ? state.value : '';
+                    previewSub.textContent = d || s || '✨ Đang treo 24/7';
+                }
+                if (previewTime) {
+                    previewTime.textContent = showTime && showTime.checked ? '⏱ 00:00:43 elapsed' : '';
+                }
+                if (previewBtn1) previewBtn1.textContent = btn1Label && btn1Label.value ? btn1Label.value : 'Website';
+                if (previewBtn2) previewBtn2.textContent = btn2Label && btn2Label.value ? btn2Label.value : 'Discord';
+            }
+        </script>
+    </div>
 </body>
 </html>
