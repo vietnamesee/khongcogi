@@ -14,18 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
-// LƯU TOKEN TRONG RAM
+// LƯU TOKEN TRONG RAM (KHÔNG CÓ TOKEN MẶC ĐỊNH)
 // ============================================================
 let tokens = [];
-
-// Thêm token mặc định để demo
-tokens.push({
-    id: Date.now().toString(),
-    token: 'MTIzNDU2Nzg5MDEyMzQ1Njc4OQ',
-    name: 'Tài khoản chính (@discord_user)',
-    createdAt: new Date().toISOString(),
-    status: 'active'
-});
 
 // ============================================================
 // HTML ROUTES
@@ -245,5 +236,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`   GET  /api/stats           - Lấy thống kê`);
     console.log(`   GET  /api/activity        - Lấy hoạt động`);
     console.log(`   POST /api/rpc/create      - Tạo RPC`);
+    console.log('='.repeat(50));
+    console.log('💡  Hiện tại chưa có token nào. Đăng nhập để thêm token!');
     console.log('='.repeat(50));
 });
