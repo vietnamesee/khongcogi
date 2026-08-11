@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscordRPC - RPC Manager</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-animated" style="min-height:100vh;display:flex;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar-desktop" id="sidebar">
+            <a href="/" class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="6" y1="12" x2="10" y2="12"></line>
+                        <line x1="8" y1="10" x2="8" y2="14"></line>
+                        <circle cx="15" cy="13" r="1" fill="white"></circle>
+                        <circle cx="17" cy="11" r="1" fill="white"></circle>
+                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                    </svg>
+                </div>
+                <span>Discord<span class="gradient-text">RPC</span></span>
+            </a>
+            <a class="sidebar-item back-btn" href="/">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Quay lại Trang chủ
+            </a>
+            <div class="sidebar-menu">
+                <div class="sidebar-menu-label">Menu Quản Lý</div>
+                <a class="sidebar-item" href="/dashboard.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="sidebar-item active" href="/rpc-manager.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    RPC Manager
+                </a>
+                <a class="sidebar-item" href="/voice-treo.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    Voice Treo
+                </a>
+                <a class="sidebar-item" href="/tokens.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                    </svg>
+                    Quản lý Tokens
+                </a>
+            </div>
+            <div class="sidebar-token-status">
+                <span class="status-dot pending"></span>
+                <span>Chưa lưu Token</span>
+                <p>Vào Dashboard để nhập Token</p>
+            </div>
+            <div class="sidebar-user">
+                <img id="userAvatar" src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                <div class="user-info">
+                    <div class="user-name">contiendinh0612</div>
+                    <div class="user-tag">#8840</div>
+                </div>
+                <button title="Đăng xuất">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="dashboard-main">
+            <!-- HEADER -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <button class="btn-secondary btn-sm" id="mobileMenuBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="btn-secondary btn-sm back-btn-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Quay lại
+                    </button>
+                    <div class="header-breadcrumb">
+                        <a href="/dashboard.html">Dashboard</a>
+                        <span>/</span>
+                        <span class="current">RPC Manager</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="lang-btn">EN</button>
+                    <button class="btn-primary btn-sm premium-btn">⭐ Nâng cấp Premium</button>
+                    <div class="user-profile">
+                        <img src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                        <div>
+                            <div class="profile-name">contiendinh0612</div>
+                            <div class="profile-status">Còn 30 ngày</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN -->
+            <main class="dashboard-content">
+                <div class="animate-fade-in">
+                    <div class="page-header">
+                        <div>
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+                                <a class="btn-secondary btn-sm" href="/dashboard.html" style="padding:4px 10px;">← Quay lại Dashboard</a>
+                                <h1>🎮 RPC Manager</h1>
+                            </div>
+                            <p class="page-sub">Tạo và quản lý Rich Presence Discord của bạn</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-secondary">🔑 + Thêm Account Token</button>
+                            <button class="btn-primary" id="openModalBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Tạo RPC mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Token Bar -->
+                    <div class="token-bar">
+                        <div class="token-info">
+                            <span class="label">🔑 Tài khoản Tokens (1):</span>
+                            <div class="token-badge">
+                                <span class="dot"></span>
+                                <strong>Tài khoản chính (@contiendinh0612)</strong>&nbsp;(@contiendinh0612)
+                                <span class="warn">⚠️</span>
+                            </div>
+                        </div>
+                        <button class="btn-secondary btn-sm">+ Thêm Token Mới</button>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="glass empty-state">
+                        <div class="icon">🎮</div>
+                        <h3>Chưa có RPC nào</h3>
+                        <p>Tạo RPC đầu tiên của bạn để bắt đầu</p>
+                        <button class="btn-primary" id="openModalBtn2">+ Tạo RPC ngay</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ===== MODAL TẠO RPC (có Preview Live) ===== -->
+        <div class="modal-overlay" id="rpcModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🆕 Tạo RPC mới</h2>
+                    <button class="modal-close" id="closeModalBtn">✕</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form bên trái -->
+                    <form class="modal-form" id="rpcForm">
+                        <!-- Chọn Token -->
+                        <div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                <label class="input-label">🔑 Chọn Tài Khoản Token</label>
+                                <button type="button" style="background:none;border:none;color:var(--brand);font-size:12px;font-weight:600;cursor:pointer;">+ Thêm Token Mới</button>
+                            </div>
+                            <select class="input-field">
+                                <option>Tài khoản chính (@contiendinh0612) (@contiendinh0612)</option>
+                                <option value="NEW_TOKEN">+ Thêm Account Token Mới...</option>
+                            </select>
+                        </div>
+
+                        <!-- Tên RPC -->
+                        <div>
+                            <label class="input-label">Tên RPC *</label>
+                            <input class="input-field" id="rpcName" placeholder="VD: Playing Minecraft" value="">
+                        </div>
+
+                        <!-- Activity Type -->
+                        <div>
+                            <label class="input-label" style="margin-bottom:10px;">LOẠI HOẠT ĐỘNG (ACTIVITY TYPE)</label>
+                            <div class="activity-types" id="activityTypes">
+                                <button type="button" class="activity-btn active" data-type="playing" title="Playing">🎮</button>
+                                <button type="button" class="activity-btn" data-type="streaming" title="Streaming">📺</button>
+                                <button type="button" class="activity-btn" data-type="watching" title="Watching">👀</button>
+                                <button type="button" class="activity-btn" data-type="listening" title="Listening">🎵</button>
+                                <button type="button" class="activity-btn" data-type="competing" title="Competing">🏆</button>
+                                <button type="button" class="activity-btn" data-type="vr" title="VR">🥽</button>
+                            </div>
+                            <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+                                📌 Đang chọn: <strong id="selectedActivityLabel">Đang chơi Game (Playing)</strong>
+                            </div>
+                        </div>
+
+                        <!-- Platform -->
+                        <div>
+                            <label class="input-label" style="color:#57f287;font-weight:700;margin-bottom:8px;">🥽 Nền tảng hiển thị Badge (Platform)</label>
+                            <div class="platform-grid" id="platformGrid">
+                                <div class="platform-chip active vr" data-platform="vr"><span>🥽</span><span>Meta Quest VR</span></div>
+                                <div class="platform-chip" data-platform="pc"><span>🖥️</span><span>Máy tính (PC)</span></div>
+                                <div class="platform-chip" data-platform="ps5"><span>🎮</span><span>PlayStation 5</span></div>
+                                <div class="platform-chip" data-platform="ps4"><span>🎮</span><span>PlayStation 4</span></div>
+                                <div class="platform-chip" data-platform="xbox"><span>🎮</span><span>Xbox Console</span></div>
+                                <div class="platform-chip" data-platform="samsung"><span>📱</span><span>Samsung Galaxy</span></div>
+                                <div class="platform-chip" data-platform="android"><span>📱</span><span>Phone Android</span></div>
+                                <div class="platform-chip" data-platform="ios"><span>📱</span><span>iPhone / iOS</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Application ID -->
+                        <div>
+                            <label class="input-label">Application ID</label>
+                            <input class="input-field" id="appId" placeholder="Discord Application ID" value="">
+                        </div>
+
+                        <!-- Details -->
+                        <div>
+                            <label class="input-label">Details (dòng 1)</label>
+                            <input class="input-field" id="details" placeholder="VD: Đang chơi với bạn bè" value="">
+                        </div>
+
+                        <!-- State -->
+                        <div>
+                            <label class="input-label">State (dòng 2)</label>
+                            <input class="input-field" id="state" placeholder="VD: Survival Mode" value="">
+                        </div>
+
+                        <!-- Large Image -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div>
+                                <label class="input-label">Large Image URL</label>
+                                <input class="input-field" id="largeImage" placeholder="https://..." value="">
+                            </div>
+                            <div>
+                                <label class="input-label">Large Text</label>
+                                <input class="input-field" id="largeText" placeholder="Tooltip text" value="">
+                            </div>
+                        </div>
+
+                        <!-- Small Image -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div>
+                                <label class="input-label">Small Image URL</label>
+                                <input class="input-field" id="smallImage" placeholder="https://..." value="">
+                            </div>
+                            <div>
+                                <label class="input-label">Small Text</label>
+                                <input class="input-field" id="smallText" placeholder="Tooltip text" value="">
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div>
+                                <label class="input-label">Button 1 Label</label>
+                                <input class="input-field" id="btn1Label" placeholder="Website" value="">
+                            </div>
+                            <div>
+                                <label class="input-label">Button 1 URL</label>
+                                <input class="input-field" id="btn1Url" placeholder="https://..." value="">
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div>
+                                <label class="input-label">Button 2 Label</label>
+                                <input class="input-field" id="btn2Label" placeholder="Discord" value="">
+                            </div>
+                            <div>
+                                <label class="input-label">Button 2 URL</label>
+                                <input class="input-field" id="btn2Url" placeholder="https://..." value="">
+                            </div>
+                        </div>
+
+                        <!-- Toggle -->
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="showTime" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span>Hiển thị thời gian elapsed</span>
+                        </div>
+
+                        <!-- Submit -->
+                        <div style="display:flex;gap:10px;margin-top:8px;">
+                            <button type="submit" class="btn-primary" style="flex:1;justify-content:center;">✅ Tạo RPC</button>
+                            <button type="button" class="btn-secondary" id="closeModalBtn2">Hủy</button>
+                        </div>
+                    </form>
+
+                    <!-- Preview bên phải -->
+                    <div class="preview-side">
+                        <div class="preview-label">PREVIEW LIVE</div>
+                        <div class="discord-card" id="previewCard">
+                            <div class="card-header">Playing — Preview</div>
+                            <div class="card-body">
+                                <div class="activity-img">
+                                    <div class="activity-large" id="previewIcon">🎮</div>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-title" id="previewTitle">Tên ứng dụng</div>
+                                    <div class="activity-sub" id="previewSub">✨ Đang treo 24/7</div>
+                                    <div class="activity-time" id="previewTime">⏱ 00:00:43 elapsed</div>
+                                    <div style="display:flex;gap:6px;margin-top:6px;">
+                                        <span class="discord-btn" id="previewBtn1">Website</span>
+                                        <span class="discord-btn" id="previewBtn2">Discord</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE BOTTOM NAV -->
+        <nav class="mobile-bottom-nav">
+            <a class="mobile-nav-item" href="/dashboard.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a class="mobile-nav-item active" href="/rpc-manager.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                <span>RPC Manager</span>
+            </a>
+            <a class="mobile-nav-item" href="/voice-treo.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span>Voice Treo</span>
+            </a>
+            <a class="mobile-nav-item" href="/tokens.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                </svg>
+                <span>Quản lý Tokens</span>
+            </a>
+        </nav>
+
+        <style>
+            @media (max-width: 768px) {
+                .sidebar-desktop { left: -240px !important; }
+                .sidebar-desktop.open { left: 0 !important; }
+                .dashboard-main { margin-left: 0 !important; }
+                #mobileMenuBtn { display: flex !important; }
+                .dashboard-content { padding: 16px 14px 80px 14px !important; }
+                .mobile-bottom-nav { display: flex !important; }
+                .modal-body { grid-template-columns: 1fr !important; }
+                .page-header { flex-direction: column; }
+                .modal-content { padding: 20px !important; max-height: 95vh; }
+                .platform-grid { grid-template-columns: 1fr 1fr !important; }
+            }
+            .discord-btn {
+                padding: 4px 12px;
+                background: rgba(255,255,255,0.06);
+                border-radius: 4px;
+                font-size: 11px;
+                color: var(--text-secondary);
+                transition: background 0.2s ease;
+                cursor: default;
+            }
+            .discord-btn:hover { background: rgba(255,255,255,0.12); }
+        </style>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

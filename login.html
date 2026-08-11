@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscordRPC - Đăng nhập</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-animated" style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
+        <div class="particle-container" id="particles"></div>
+
+        <div class="login-container glass" style="max-width:420px;width:100%;padding:40px;text-align:center;position:relative;z-index:1;">
+            <div class="login-logo" style="margin-bottom:24px;">
+                <div style="width:56px;height:56px;background:var(--brand-gradient);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="6" y1="12" x2="10" y2="12"></line>
+                        <line x1="8" y1="10" x2="8" y2="14"></line>
+                        <circle cx="15" cy="13" r="1" fill="white"></circle>
+                        <circle cx="17" cy="11" r="1" fill="white"></circle>
+                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                    </svg>
+                </div>
+                <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.02em;">Đăng nhập vào <span class="gradient-text">DiscordRPC</span></h2>
+                <p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">Chọn cách đăng nhập của bạn</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <a class="btn-primary" href="/dashboard.html" style="padding:14px;font-size:16px;justify-content:center;width:100%;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.082.114 18.104.132 18.12a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"></path>
+                    </svg>
+                    Đăng nhập với Discord
+                </a>
+
+                <div style="display:flex;align-items:center;gap:12px;margin:8px 0;">
+                    <hr style="flex:1;border-color:var(--glass-border);">
+                    <span style="color:var(--text-muted);font-size:12px;font-weight:600;">HOẶC</span>
+                    <hr style="flex:1;border-color:var(--glass-border);">
+                </div>
+
+                <form id="tokenLoginForm" style="display:flex;flex-direction:column;gap:12px;">
+                    <input class="input-field" type="password" id="tokenInput" placeholder="Nhập Discord User Token của bạn..." style="text-align:center;font-size:14px;padding:12px;">
+                    <button type="submit" class="btn-secondary" style="padding:12px;font-size:15px;justify-content:center;width:100%;">
+                        🔑 Đăng nhập bằng Token
+                    </button>
+                </form>
+            </div>
+
+            <p style="color:var(--text-muted);font-size:12px;margin-top:20px;line-height:1.5;">
+                ⚠️ Sử dụng user token có thể vi phạm Discord ToS.<br>
+                Bạn tự chịu trách nhiệm khi sử dụng.
+            </p>
+        </div>
+
+        <style>
+            .login-container {
+                animation: fadeInUp 0.5s ease;
+            }
+            .login-container:hover {
+                transform: none !important;
+                border-color: rgba(255,255,255,0.15);
+            }
+            @media (max-width: 480px) {
+                .login-container { padding: 28px 20px !important; margin: 16px; }
+            }
+        </style>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

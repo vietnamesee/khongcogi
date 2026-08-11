@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscordRPC - Quản lý Tokens</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-animated" style="min-height:100vh;display:flex;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar-desktop" id="sidebar">
+            <a href="/" class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="6" y1="12" x2="10" y2="12"></line>
+                        <line x1="8" y1="10" x2="8" y2="14"></line>
+                        <circle cx="15" cy="13" r="1" fill="white"></circle>
+                        <circle cx="17" cy="11" r="1" fill="white"></circle>
+                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                    </svg>
+                </div>
+                <span>Discord<span class="gradient-text">RPC</span></span>
+            </a>
+            <a class="sidebar-item back-btn" href="/">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Quay lại Trang chủ
+            </a>
+            <div class="sidebar-menu">
+                <div class="sidebar-menu-label">Menu Quản Lý</div>
+                <a class="sidebar-item" href="/dashboard.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="sidebar-item" href="/rpc-manager.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    RPC Manager
+                </a>
+                <a class="sidebar-item" href="/voice-treo.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    Voice Treo
+                </a>
+                <a class="sidebar-item active" href="/tokens.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                    </svg>
+                    Quản lý Tokens
+                </a>
+            </div>
+            <div class="sidebar-token-status">
+                <span class="status-dot pending"></span>
+                <span>Chưa lưu Token</span>
+                <p>Vào Dashboard để nhập Token</p>
+            </div>
+            <div class="sidebar-user">
+                <img src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                <div class="user-info">
+                    <div class="user-name">contiendinh0612</div>
+                    <div class="user-tag">#8840</div>
+                </div>
+                <button title="Đăng xuất">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="dashboard-main">
+            <!-- HEADER -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <button class="btn-secondary btn-sm" id="mobileMenuBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="btn-secondary btn-sm back-btn-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Quay lại
+                    </button>
+                    <div class="header-breadcrumb">
+                        <a href="/dashboard.html">Dashboard</a>
+                        <span>/</span>
+                        <span class="current">Quản lý Tokens</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="lang-btn">EN</button>
+                    <button class="btn-primary btn-sm premium-btn">⭐ Nâng cấp Premium</button>
+                    <div class="user-profile">
+                        <img src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                        <div>
+                            <div class="profile-name">contiendinh0612</div>
+                            <div class="profile-status">Còn 30 ngày</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN -->
+            <main class="dashboard-content">
+                <div class="animate-fade-in">
+                    <div class="page-header">
+                        <div>
+                            <h1>🔑 Quản lý Tokens</h1>
+                            <p class="page-sub">Quản lý Discord User Tokens của bạn. Token được mã hóa AES-256.</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-primary" id="addTokenBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                + Thêm Token
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="glass empty-state">
+                        <div class="icon">🔑</div>
+                        <h3>Chưa có Token nào</h3>
+                        <p>Thêm Discord User Token đầu tiên để bắt đầu sử dụng dịch vụ</p>
+                        <button class="btn-primary" id="addTokenBtn2">+ Thêm Token ngay</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- MOBILE BOTTOM NAV -->
+        <nav class="mobile-bottom-nav">
+            <a class="mobile-nav-item" href="/dashboard.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a class="mobile-nav-item" href="/rpc-manager.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                <span>RPC Manager</span>
+            </a>
+            <a class="mobile-nav-item" href="/voice-treo.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span>Voice Treo</span>
+            </a>
+            <a class="mobile-nav-item active" href="/tokens.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                </svg>
+                <span>Quản lý Tokens</span>
+            </a>
+        </nav>
+
+        <style>
+            @media (max-width: 768px) {
+                .sidebar-desktop { left: -240px !important; }
+                .sidebar-desktop.open { left: 0 !important; }
+                .dashboard-main { margin-left: 0 !important; }
+                #mobileMenuBtn { display: flex !important; }
+                .dashboard-content { padding: 16px 14px 80px 14px !important; }
+                .mobile-bottom-nav { display: flex !important; }
+                .page-header { flex-direction: column; }
+            }
+        </style>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

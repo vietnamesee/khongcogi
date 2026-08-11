@@ -1,0 +1,13 @@
+{
+  "name": "discordrpc-clone",
+  "version": "1.0.0",
+  "description": "DiscordRPC - Treo RPC & Voice 24/7",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

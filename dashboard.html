@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiscordRPC - Dashboard</title>
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-animated" style="min-height:100vh;display:flex;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar-desktop" id="sidebar">
+            <a href="/" class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="6" y1="12" x2="10" y2="12"></line>
+                        <line x1="8" y1="10" x2="8" y2="14"></line>
+                        <circle cx="15" cy="13" r="1" fill="white"></circle>
+                        <circle cx="17" cy="11" r="1" fill="white"></circle>
+                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                    </svg>
+                </div>
+                <span>Discord<span class="gradient-text">RPC</span></span>
+            </a>
+            <a class="sidebar-item back-btn" href="/">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Quay lại Trang chủ
+            </a>
+            <div class="sidebar-menu">
+                <div class="sidebar-menu-label">Menu Quản Lý</div>
+                <a class="sidebar-item active" href="/dashboard.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="sidebar-item" href="/rpc-manager.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    RPC Manager
+                </a>
+                <a class="sidebar-item" href="/voice-treo.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    Voice Treo
+                </a>
+                <a class="sidebar-item" href="/tokens.html">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                    </svg>
+                    Quản lý Tokens
+                </a>
+            </div>
+            <div class="sidebar-token-status">
+                <span class="status-dot pending"></span>
+                <span>Chưa lưu Token</span>
+                <p>Vào Dashboard để nhập Token</p>
+            </div>
+            <div class="sidebar-user">
+                <img id="userAvatar" src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                <div class="user-info">
+                    <div class="user-name" id="userName">contiendinh0612</div>
+                    <div class="user-tag" id="userTag">#8840</div>
+                </div>
+                <button id="logoutBtn" title="Đăng xuất">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="dashboard-main">
+            <!-- HEADER -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <button class="btn-secondary btn-sm" id="mobileMenuBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="btn-secondary btn-sm back-btn-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Quay lại
+                    </button>
+                    <div class="header-breadcrumb">
+                        <span class="current">Dashboard</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="lang-btn">EN</button>
+                    <button class="btn-primary btn-sm premium-btn">⭐ Nâng cấp Premium</button>
+                    <div class="user-profile">
+                        <img id="headerAvatar" src="https://cdn.discordapp.com/avatars/1519532149361868840/27408d735d67d78dd126ab31696030bd.webp?size=64" alt="User">
+                        <div>
+                            <div class="profile-name" id="headerName">contiendinh0612</div>
+                            <div class="profile-status">Còn 30 ngày</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MAIN -->
+            <main class="dashboard-content">
+                <div class="animate-fade-in">
+                    <div class="page-header">
+                        <div>
+                            <h1>Dashboard</h1>
+                            <p class="page-sub" id="welcomeText">Xin chào contiendinh0612! Quản lý RPC và Voice của bạn tại đây.</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-secondary btn-sm">⚙️ Cài đặt</button>
+                            <button class="btn-primary btn-sm">🔄 Làm mới</button>
+                        </div>
+                    </div>
+
+                    <!-- Token Alert -->
+                    <div class="token-alert">
+                        <div class="token-alert-icon">⚠️</div>
+                        <div class="token-alert-content">
+                            <div class="token-alert-title">Chưa cấu hình Discord Token</div>
+                            <div class="token-alert-desc">Bạn cần lưu Discord User Token để bật chức năng treo RPC và Voice. Token được mã hóa AES-256 trước khi lưu.</div>
+                            <button class="btn-primary btn-sm add-token-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 2l-2 2m-3 1l-4 4m0 0l-1.5-1.5M12 9l-7.5 7.5a2.12 2.12 0 0 0-.62 1.5V20a1 1 0 0 0 1 1h2a2.12 2.12 0 0 0 1.5-.62L15 14m0 0l2 2m-2-2l-1.5-1.5"></path>
+                                    <circle cx="16.5" cy="7.5" r="3.5"></circle>
+                                </svg>
+                                Thêm Token ngay
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <a href="/rpc-manager.html" class="stat-card">
+                            <div class="stat-icon" style="color:#5865F2;background:rgba(88,101,242,0.1);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5865F2" stroke-width="2">
+                                    <line x1="6" y1="12" x2="10" y2="12"></line>
+                                    <line x1="8" y1="10" x2="8" y2="14"></line>
+                                    <circle cx="15" cy="13" r="1" fill="#5865F2"></circle>
+                                    <circle cx="17" cy="11" r="1" fill="#5865F2"></circle>
+                                    <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-number" style="color:#5865F2;">0</div>
+                            <div class="stat-label">RPC đang chạy / 0 tổng</div>
+                        </a>
+                        <a href="/voice-treo.html" class="stat-card">
+                            <div class="stat-icon" style="color:#57F287;background:rgba(87,242,135,0.1);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#57F287" stroke-width="2">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-number" style="color:#57F287;">0</div>
+                            <div class="stat-label">Voice đang treo / 0 tổng</div>
+                        </a>
+                        <a href="/rpc-manager.html" class="stat-card">
+                            <div class="stat-icon" style="color:#7289DA;background:rgba(114,137,218,0.1);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7289DA" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6" stroke-width="3"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12" stroke-width="3"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18" stroke-width="3"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-number" style="color:#7289DA;">0</div>
+                            <div class="stat-label">Tổng RPC</div>
+                        </a>
+                        <a href="/voice-treo.html" class="stat-card">
+                            <div class="stat-icon" style="color:#FEE75C;background:rgba(254,231,92,0.1);">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FEE75C" stroke-width="2">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-number" style="color:#FEE75C;">0</div>
+                            <div class="stat-label">Tổng Voice</div>
+                        </a>
+                    </div>
+
+                    <!-- Quick Actions + Activity -->
+                    <div class="dashboard-bottom">
+                        <div class="glass quick-actions">
+                            <h2>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FEE75C" stroke-width="2">
+                                    <path d="M12 2v4m0 12v4M2 12h4m12 0h4m-3.17-6.83l-2.83 2.83m-8 8l-2.83 2.83m0-13.66l2.83 2.83m8 8l2.83 2.83"></path>
+                                </svg>
+                                Thao tác nhanh
+                            </h2>
+                            <div class="quick-actions-grid">
+                                <a class="btn-secondary btn-sm" href="/rpc-manager.html">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5865F2" stroke-width="2">
+                                        <line x1="6" y1="12" x2="10" y2="12"></line>
+                                        <line x1="8" y1="10" x2="8" y2="14"></line>
+                                        <circle cx="15" cy="13" r="1" fill="#5865F2"></circle>
+                                        <circle cx="17" cy="11" r="1" fill="#5865F2"></circle>
+                                        <path d="M17.5 4h-11A5.5 5.5 0 0 0 1 9.5v3A5.5 5.5 0 0 0 6.5 18H8l2 3h4l2-3h1.5a5.5 5.5 0 0 0 5.5-5.5v-3A5.5 5.5 0 0 0 17.5 4z"></path>
+                                    </svg>
+                                    Tạo RPC mới
+                                </a>
+                                <a class="btn-secondary btn-sm" href="/voice-treo.html">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#57F287" stroke-width="2">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                                    </svg>
+                                    Thêm Voice Session
+                                </a>
+                                <button class="btn-primary btn-sm add-token-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 2l-2 2m-3 1l-4 4m0 0l-1.5-1.5M12 9l-7.5 7.5a2.12 2.12 0 0 0-.62 1.5V20a1 1 0 0 0 1 1h2a2.12 2.12 0 0 0 1.5-.62L15 14m0 0l2 2m-2-2l-1.5-1.5"></path>
+                                        <circle cx="16.5" cy="7.5" r="3.5"></circle>
+                                    </svg>
+                                    Thêm Token
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass recent-activity">
+                            <div class="recent-header">
+                                <h2>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5865F2" stroke-width="2">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                    </svg>
+                                    Hoạt động gần đây
+                                </h2>
+                                <span class="recent-auto">Tự động làm mới</span>
+                            </div>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7289DA" stroke-width="2">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="activity-text">Đã đăng nhập qua Discord OAuth</span>
+                                    <span class="activity-time">07:18 11-08</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- MOBILE BOTTOM NAV -->
+        <nav class="mobile-bottom-nav">
+            <a class="mobile-nav-item active" href="/dashboard.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a class="mobile-nav-item" href="/rpc-manager.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                <span>RPC Manager</span>
+            </a>
+            <a class="mobile-nav-item" href="/voice-treo.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span>Voice Treo</span>
+            </a>
+            <a class="mobile-nav-item" href="/tokens.html">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                </svg>
+                <span>Quản lý Tokens</span>
+            </a>
+        </nav>
+
+        <style>
+            @media (max-width: 768px) {
+                .sidebar-desktop { left: -240px !important; }
+                .sidebar-desktop.open { left: 0 !important; }
+                .dashboard-main { margin-left: 0 !important; }
+                #mobileMenuBtn { display: flex !important; }
+                .dashboard-content { padding: 16px 14px 80px 14px !important; }
+                .mobile-bottom-nav { display: flex !important; }
+                .stats-grid { grid-template-columns: 1fr 1fr !important; }
+                .dashboard-bottom { grid-template-columns: 1fr !important; }
+                .page-header { flex-direction: column; }
+            }
+        </style>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
