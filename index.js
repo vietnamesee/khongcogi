@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
@@ -20,8 +19,6 @@ let tokens = [];
 // ============================================================
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
-app.get('/rpc-manager', (req, res) => res.sendFile(path.join(__dirname, 'rpc-manager.html')));
-app.get('/voice-treo', (req, res) => res.sendFile(path.join(__dirname, 'voice-treo.html')));
 app.get('/tokens', (req, res) => res.sendFile(path.join(__dirname, 'tokens.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 
@@ -56,8 +53,8 @@ app.post('/api/tokens/add', (req, res) => {
     const newToken = {
         id: Date.now().toString(),
         token: token,
-        name: name || 'Tài khoản Discord',
-        createdAt: new Date().toISOString(),
+        name: name || 'Token ' + (tokens.length + 1),
+        createdAt: new Date().toLocaleString('vi-VN'),
         status: 'active'
     };
 
@@ -114,7 +111,39 @@ app.put('/api/tokens/:id/status', (req, res) => {
 });
 
 // ============================================================
-// API - STATS (CHỈ TOKEN, KHÔNG USER)
+// API - RPC
+// ============================================================
+
+app.post('/api/rpc/create', (req, res) => {
+    const { tokenId, name, details, state, appId, activityType, platform } = req.body;
+
+    // Kiểm tra token tồn tại
+    const token = tokens.find(t => t.id === tokenId);
+    if (!token) {
+        return res.status(404).json({
+            success: false,
+            message: 'Không tìm thấy token!'
+        });
+    }
+
+    res.json({
+        success: true,
+        message: 'RPC đã được tạo thành công!',
+        data: {
+            token: token.token,
+            name: name || 'RPC của tôi',
+            details: details || '',
+            state: state || '',
+            appId: appId || '',
+            activityType: activityType || 'playing',
+            platform: platform || 'pc',
+            createdAt: new Date().toLocaleString('vi-VN')
+        }
+    });
+});
+
+// ============================================================
+// API - STATS
 // ============================================================
 
 app.get('/api/stats', (req, res) => {
@@ -124,40 +153,20 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-app.get('/api/activity', (req, res) => {
-    const activities = tokens.slice(-5).map(t => ({
-        icon: 'token',
-        text: `Đã thêm token: ${t.name || 'Không tên'}`,
-        time: new Date(t.createdAt).toLocaleString('vi-VN')
-    }));
-
-    if (activities.length === 0) {
-        activities.push({
-            icon: 'login',
-            text: 'Chưa có hoạt động nào',
-            time: new Date().toLocaleString('vi-VN')
-        });
-    }
-
-    res.json(activities.reverse());
-});
-
 // ============================================================
 // START
 // ============================================================
 app.listen(PORT, () => {
     console.log('='.repeat(50));
-    console.log('🎮  DiscordRPC Server đã chạy!');
+    console.log('🎮  DiscordRPC Server');
     console.log('='.repeat(50));
     console.log(`🔗  http://localhost:${PORT}`);
     console.log('='.repeat(50));
     console.log('📄  Các trang:');
-    console.log(`   /            - Trang chủ`);
-    console.log(`   /dashboard   - Dashboard`);
-    console.log(`   /rpc-manager - RPC Manager`);
-    console.log(`   /voice-treo  - Voice Treo`);
-    console.log(`   /tokens      - Quản lý Tokens`);
-    console.log(`   /login       - Đăng nhập`);
+    console.log(`   /        - Trang chủ`);
+    console.log(`   /dashboard - Dashboard`);
+    console.log(`   /tokens  - Quản lý Token`);
+    console.log(`   /login   - Thêm Token`);
     console.log('='.repeat(50));
     console.log(`🔑  Token hiện tại: ${tokens.length}`);
     console.log('='.repeat(50));
