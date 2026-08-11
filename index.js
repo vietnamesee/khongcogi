@@ -5,16 +5,13 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ============================================================
-// MIDDLEWARE
-// ============================================================
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
 // ============================================================
-// LƯU TOKEN TRONG RAM
+// LƯU TOKEN
 // ============================================================
 let tokens = [];
 
@@ -32,12 +29,12 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html'))
 // API - TOKENS
 // ============================================================
 
-// 1. Lấy danh sách tokens
+// Lấy danh sách token
 app.get('/api/tokens', (req, res) => {
     res.json({ tokens });
 });
 
-// 2. Thêm token (tự động)
+// Thêm token
 app.post('/api/tokens/add', (req, res) => {
     const { token, name } = req.body;
 
@@ -68,6 +65,8 @@ app.post('/api/tokens/add', (req, res) => {
 
     tokens.push(newToken);
 
+    console.log(`✅ Đã thêm token: ${token.slice(0, 10)}...`);
+
     res.json({
         success: true,
         message: 'Thêm token thành công!',
@@ -75,7 +74,7 @@ app.post('/api/tokens/add', (req, res) => {
     });
 });
 
-// 3. Xóa token
+// Xóa token
 app.delete('/api/tokens/:id', (req, res) => {
     const { id } = req.params;
     const index = tokens.findIndex(t => t.id === id);
@@ -95,7 +94,7 @@ app.delete('/api/tokens/:id', (req, res) => {
     });
 });
 
-// 4. Cập nhật trạng thái token
+// Cập nhật trạng thái token
 app.put('/api/tokens/:id/status', (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
@@ -117,77 +116,36 @@ app.put('/api/tokens/:id/status', (req, res) => {
     });
 });
 
-// 5. Kiểm tra token (luôn trả về thành công)
-app.post('/api/token/verify', (req, res) => {
-    const { token } = req.body;
-
-    if (!token) {
-        return res.status(400).json({
-            success: false,
-            message: 'Vui lòng nhập token!'
-        });
-    }
-
-    if (token.length < 20) {
-        return res.status(400).json({
-            success: false,
-            message: 'Token không hợp lệ!'
-        });
-    }
-
-    res.json({
-        success: true,
-        message: 'Token hợp lệ!',
-        data: {
-            username: 'discord_user_' + token.slice(-4),
-            discriminator: '1234',
-            avatar: 'https://cdn.discordapp.com/embed/avatars/0.png'
-        }
-    });
-});
-
 // ============================================================
 // API - USER & STATS
 // ============================================================
 
-// 6. Lấy thông tin user
 app.get('/api/user', (req, res) => {
     res.json({
-        id: 'user_id_placeholder',
         username: 'discord_user',
         discriminator: '1234',
         avatar: 'https://cdn.discordapp.com/embed/avatars/0.png',
-        premium: false,
-        premiumDays: 0,
         tokenCount: tokens.length
     });
 });
 
-// 7. Lấy thống kê
 app.get('/api/stats', (req, res) => {
-    const activeTokens = tokens.filter(t => t.status === 'active').length;
-
     res.json({
         rpcRunning: 0,
         rpcTotal: 0,
         voiceRunning: 0,
         voiceTotal: 0,
         tokens: tokens.length,
-        activeTokens: activeTokens
+        activeTokens: tokens.filter(t => t.status === 'active').length
     });
 });
 
-// 8. Lấy hoạt động gần đây
 app.get('/api/activity', (req, res) => {
-    const activities = [];
-
-    tokens.slice(-5).forEach(token => {
-        activities.push({
-            icon: 'token',
-            text: `Đã thêm token: ${token.name || 'Không tên'}`,
-            time: new Date(token.createdAt).toLocaleString('vi-VN')
-        });
-    });
+    const activities = tokens.slice(-5).map(t => ({
+        icon: 'token',
+        text: `Đã thêm token: ${t.name || 'Không tên'}`,
+        time: new Date(t.createdAt).toLocaleString('vi-VN')
+    }));
 
     if (activities.length === 0) {
         activities.push({
@@ -200,18 +158,12 @@ app.get('/api/activity', (req, res) => {
     res.json(activities.reverse());
 });
 
-// 9. Tạo RPC
 app.post('/api/rpc/create', (req, res) => {
-    const { name, details, state, appId, activityType, platform } = req.body;
-    res.json({
-        success: true,
-        message: 'RPC đã được tạo thành công!',
-        data: { name, details, state, appId, activityType, platform }
-    });
+    res.json({ success: true, message: 'RPC đã được tạo!' });
 });
 
 // ============================================================
-// START SERVER
+// START
 // ============================================================
 app.listen(PORT, '0.0.0.0', () => {
     console.log('='.repeat(50));
@@ -227,17 +179,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`   /tokens      - Quản lý Tokens`);
     console.log(`   /login       - Đăng nhập`);
     console.log('='.repeat(50));
-    console.log('📦  API:');
-    console.log(`   GET  /api/tokens          - Lấy danh sách token`);
-    console.log(`   POST /api/tokens/add      - Thêm token`);
-    console.log(`   DELETE /api/tokens/:id    - Xóa token`);
-    console.log(`   PUT /api/tokens/:id/status - Cập nhật trạng thái`);
-    console.log(`   POST /api/token/verify    - Kiểm tra token`);
-    console.log(`   GET  /api/user            - Lấy thông tin user`);
-    console.log(`   GET  /api/stats           - Lấy thống kê`);
-    console.log(`   GET  /api/activity        - Lấy hoạt động`);
-    console.log(`   POST /api/rpc/create      - Tạo RPC`);
-    console.log('='.repeat(50));
-    console.log('💡  Nhập token bất kỳ để thêm vào danh sách!');
+    console.log('💡  Token hiện tại:', tokens.length);
     console.log('='.repeat(50));
 });
